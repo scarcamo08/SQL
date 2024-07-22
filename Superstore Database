@@ -1,0 +1,49 @@
+CREATE TABLE superstore (
+    item_id INTEGER PRIMARY KEY,
+    item_name TEXT,
+    category TEXT,
+    price DECIMAL(10, 2),
+    stock_quantity INTEGER,
+    average_rating DECIMAL(3, 2)
+);
+
+INSERT INTO superstore (item_id, item_name, category, price, stock_quantity, average_rating)
+VALUES
+    (1, 'Stainless Steel Cookware Set', 'Kitchen Supplies', 89.99, 50, 4.6),
+    (2, 'Memory Foam Mattress', 'Furnishings', 499.99, 30, 4.8),
+    (3, 'Smart LED TV', 'Electronics', 549.00, 20, 4.5),
+    (4, 'Robot Vacuum Cleaner', 'Appliances', 199.50, 40, 4.3),
+    (5, 'Wireless Bluetooth Speaker', 'Electronics', 39.99, 60, 4.2),
+    (6, 'Non-Stick Baking Set', 'Kitchen Supplies', 29.95, 80, 4.4),
+    (7, 'Cotton Bedding Set', 'Furnishings', 89.00, 25, 4.7),
+    (8, 'Smart Home Security Camera', 'Electronics', 79.95, 15, 4.1),
+    (9, 'Air Purifier', 'Appliances', 129.50, 35, 4.6),
+    (10, 'Premium Coffee Maker', 'Kitchen Supplies', 79.99, 50, 4.9),
+    (11, 'Ergonomic Office Chair', 'Furnishings', 189.00, 20, 4.5),
+    (12, 'Wireless Earbuds', 'Electronics', 49.99, 75, 4.3),
+    (13, 'Slow Cooker', 'Appliances', 49.95, 30, 4.7),
+    (14, 'Cutlery Set', 'Kitchen Supplies', 34.50, 40, 4.4),
+    (15, 'Cozy Throw Blanket', 'Furnishings', 24.99, 100, 4.2);
+
+-- 1 SQL query Ordering items by Price
+select item_name, price from superstore order by price;
+
+-- 2 Statistics abt item Prices
+select sum(price) from superstore;
+select avg(price) from superstore;
+select max(price) from superstore;
+select min(price) from superstore;
+
+select category, sum(price) from superstore group by category;
+
+-- 3 Statistic abt the price for items in the category "Kitchen Supplies"
+select category, item_name, price from superstore where category = "Kitchen Supplies" order by price desc;
+
+select category, item_name, price from superstore where category = "Kitchen Supplies" and price > 85;
+
+select category, avg(price) from superstore where category = "Kitchen Supplies";
+
+-- 4 My own Question- what is our current stock of items/our 5 most expensive items
+select stock_quantity from superstore;
+select sum(stock_quantity) from superstore;
+select item_name, price from superstore order by price desc limit 5;
