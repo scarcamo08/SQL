@@ -46,4 +46,4 @@ select category, avg(price) from superstore where category = "Kitchen Supplies";
 -- 4 My own Question- what is our current stock of items/our 5 most expensive items
 select stock_quantity from superstore;
 select sum(stock_quantity) from superstore;
-select item_name, price from superstore order by price desc limit 5;
+select item_name, price from superstore order by price desc limit 6;
