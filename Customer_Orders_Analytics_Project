@@ -1,0 +1,158 @@
+# In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data.
+# Included were Customers, January Sales, February Sales tables as well as Column info about OrderIDs, AccountNumbers,
+        Product, Quantity, price, orderdate, and location
+# First project where we began working and cleaning "messy" data
+      Primary filters for cleaning were "where length(orderID) = 6, and orderID <> 'Order ID';"
+
+-- 1) Wanted a count of column and filtered out messy orderID data: # of orders in Jan 9681
+select count(orderID) from BIT_DB.JanSales
+where length(orderID) = 6
+and orderID <> 'Order ID';
+
+select * from BIT_DB.JanSales limit 5;
+
+select Product from BIT_DB.JanSales
+where Product = 'iPhone';
+
+
+--2) How many of those orders were for iphone
+select count(Product) from BIT_DB.JanSales
+where Product = 'iPhone'
+and length(orderID) = 6;
+-- my query = 379 orders for iphone
+
+SELECT COUNT(orderid)
+FROM BIT_DB.JanSales
+WHERE Product='iPhone'
+AND length(orderid) = 6
+AND orderid <> 'Order ID';
+-- Course query = 379 orders for iphone
+
+-- 3) Select the customer account numbers for all the orders that were placed in February
+select * from BIT_DB.customers;
+select * from BIT_DB.FebSales;
+--had to view messy data. will join on orderIDs. length=6
+
+select acctnum from BIT_DB.customers customers
+join BIT_DB.FebSales feb on customers.order_id = feb.orderID;
+-- count = 1000 acct #s
+
+select acctnum from BIT_DB.customers customers
+join BIT_DB.FebSales feb on customers.order_id = feb.orderID
+where length(feb.orderID) = 6;
+-- My query also count = 1000 acct #s
+
+
+SELECT distinct acctnum
+FROM BIT_DB.customers cust
+INNER JOIN BIT_DB.FebSales Feb
+ON cust.order_id=FEB.orderid
+WHERE length(orderid) = 6
+AND orderid <> 'Order ID';
+-- Course query and also count = 1000
+
+select distinct acctnum from BIT_DB.customers customers
+join BIT_DB.FebSales feb on customers.order_id = feb.orderID
+where length(feb.orderID) = 6;
+
+
+
+-- 4) Which product was the cheapest one sold in January, and what was the price?
+select * from BIT_DB.JanSales;
+--get a view of our data
+
+select min(price) from BIT_DB.JanSales;
+-- 2.99 but we don't know what the product was
+
+select distinct Product from BIT_DB.JanSales
+where price = 2.99;
+-- AAA Batteries (4Pack). My answer but elected to run multiple queries 
+
+SELECT distinct Product, price
+FROM BIT_DB.JanSales
+WHERE price in (SELECT min(price) FROM BIT_DB.JanSales);
+-- Course query. also AAA Batteries, 2.99. Chose a subquery to always have an outside query that would be up to date. more efficient.
+
+
+
+-- 5) What is the total revenue for each product sold in January?
+-- (Revenue can be calculated using the number of products sold and the price of the products).
+select count(distinct(Product)) from BIT_DB.JanSales;
+-- 21 distinct products sold in January
+
+select distinct product, round(sum(price)) from BIT_DB.JanSales
+group by product;
+-- thought abt it wrong. revenue is a product of qty and price
+
+select product, sum(Quantity)*price as Revenue
+from BIT_DB.JanSales
+group by product;
+-- Course answer, same results
+
+
+--6) Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+select Product, sum(Quantity), sum(Quantity)*price as Revenue
+from BIT_DB.FebSales
+where location = '548 Lincoln St, Seattle, WA 98101';
+-- My answer. Product = Batteries, 2 sold, Revenue 7.68
+
+SELECT
+sum(Quantity),
+product,
+sum(quantity)*price as revenue
+FROM BIT_DB.FebSales
+WHERE location = '548 Lincoln St, Seattle, WA 98101'
+GROUP BY product;
+-- Course answer, same results.
+
+
+--7) How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
+select count(acctnum) from BIT_DB.customers customers
+join BIT_DB.FebSales feb
+on customers.order_id=feb.orderID;
+
+select acctnum from BIT_DB.customers;
+-- 1000
+select count(acctnum) from BIT_DB.customers;
+-- 21,759
+select count(distinct acctnum) from BIT_DB.customers;
+-- 21,759
+select * from BIT_DB.customers;
+-- 1000 rows
+
+select * from BIT_DB.FebSales
+where Quantity > 2
+and length(orderID) = 6;
+
+select acctnum, price
+from BIT_DB.customers customers
+join BIT_DB.FebSales feb
+on customers.order_id = feb.orderID
+where Quantity > 2
+and length(orderID) = 6;
+--best shot rn
+
+SELECT
+count(distinct cust.acctnum),
+avg(quantity*price)
+FROM BIT_DB.FebSales Feb
+LEFT JOIN BIT_DB.customers cust
+ON FEB.orderid=cust.order_id
+WHERE Feb.Quantity>2
+AND length(orderid) = 6
+AND orderid <> 'Order ID';
+-- Course Answer. Wanted 1 total number of customers and 1 total avg spent
+
+select count(distinct acctnum), avg(Quantity*price) as AVG_Spent
+from BIT_DB.customers customers
+join BIT_DB.FebSales feb
+on customers.order_id = feb.orderID
+where Quantity > 2
+and length(orderID) = 6
+and orderID <> 'Order ID';
+--Reworked how I would have coded the answer.
+
+
+
+
+
