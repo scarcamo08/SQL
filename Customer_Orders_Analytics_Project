@@ -156,3 +156,53 @@ and orderID <> 'Order ID';
 
 
 
+
+#4.4 Advanced Data Filtering (Where...Between...And...;)
+                             (where... = ' ';)
+                             (where...Like '% %';) 
+--Likely to DO/SEE in a corporate setting = Filtering data by Date
+
+select orderdate from BIT_DB.FebSales
+where orderdate between '02/13/19 00:00'
+and '02/18/19 00:00';
+-- Seeing the moment that either orders placed or orders processed.
+-- orderdates are not chronological. not ideal.
+
+select location
+from BIT_DB.FebSales
+where orderdate = '02/18/19 01:35';
+-- one result for a location that placed order at 1:35
+
+select sum(Quantity)
+from BIT_DB.FebSales
+where orderdate like '02/18/19%';
+-- one result for qty of items ordered at any point on 2/18 = 508
+
+select distinct Product
+from BIT_DB.FebSales
+where Product like '%Batteries%';
+-- 2 results for AA and AAA batteries
+
+select distinct Product, Price
+from BIT_DB.FebSales
+where Price like '%.99';
+-- 8 results for distinct products with any price ending in .99
+
+-- List all the products sold in Los Angeles in February, and include how many of each were sold.
+select Product, sum(Quantity)
+from BIT_DB.FebSales
+where location like '%Los Angeles%'
+group by Product;
+-- 19 distinct and grouped results for products and their qty sold in %LA%
+
+SELECT Product, SUM(quantity)
+FROM BIT_DB.FebSales
+WHERE location like '%Los Angeles%'
+GROUP BY Product;
+-- Course answer. same results.
+
+
+
+
+
+
