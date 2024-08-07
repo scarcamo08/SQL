@@ -153,7 +153,7 @@ and orderID <> 'Order ID';
 --Reworked how I would have coded the answer.
 
 
-
+#######################################################################################################################
 
 
 
@@ -200,6 +200,152 @@ FROM BIT_DB.FebSales
 WHERE location like '%Los Angeles%'
 GROUP BY Product;
 -- Course answer. same results.
+
+
+#############################################################################################
+
+
+--1 Which locations in New York received at least 3 orders in January, and how many orders did they each receive? (Hint: use HAVING).
+select location, count(orderID)
+from BIT_DB.JanSales
+where length(orderID) = 6
+and location like '%New York%'
+group by location
+having count(orderID) >= 3;
+-- My result with 4 locations in NY, in January, placing at least 3 orders
+
+SELECT distinct location, count(orderID)
+FROM BIT_DB.JanSales
+WHERE location LIKE '%NY%'
+AND length(orderid) = 6 
+AND orderid <> 'Order ID'
+GROUP BY location
+HAVING count(orderID)>2;
+--Course answer. Same results!
+
+
+
+--2 How many of each type of headphone were sold in February?
+select Product, count(Quantity) from BIT_DB.FebSales
+where length(orderID) = 6
+and orderID <> 'Order ID'
+group by Product
+having Product like '%Headphones%';
+-- first run at it. should have used sum instead of quantity.
+
+SELECT sum(Quantity) as quantity,
+Product
+FROM BIT_DB.FebSales 
+WHERE Product like '%Headphones%'
+GROUP BY Product;
+-- Course answer. total quantities for ea of the 3 results we larger than my results. she used sum and I incorrectly used count. otherwise, we did return essentially the same results.
+
+select Product, sum(Quantity)
+from BIT_DB.FebSales
+where length(orderID) = 6
+and orderID <> 'Order ID'
+group by Product
+having Product like '%Headphones%';
+-- Reworked my query the way i had it to verify that changing from count to sum would lead to same as course results. it did.
+
+
+
+--3 What was the average amount spent per account in February? (Hints: For this question, we want the average amount spent / number of accounts, not the amount spent by each account. To multiply, you can use the * symbol, and to divide, you can use the / symbol.)
+select Round((sum(Quantity*price))/count(acctnum)) as AVG_Spent
+from BIT_DB.customers customers
+join BIT_DB.FebSales feb
+on customers.order_id = feb.orderID
+where length(orderID) = 6
+and orderID <> 'Order ID';
+-- best shot. AVG Spent = 190
+
+SELECT sum(quantity*price)/count(cust.acctnum)
+FROM BIT_DB.FebSales Feb
+
+LEFT JOIN BIT_DB.customers cust
+ON FEB.orderid=cust.order_id
+
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+-- Course answer. yes same results except for I chose to Round my answer: AVG Spent 190
+
+SELECT avg(quantity*price)
+FROM BIT_DB.FebSales Feb
+
+LEFT JOIN BIT_DB.customers cust
+ON FEB.orderid=cust.order_id
+
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+-- OR course showed you could also just use avg function. also 190
+
+
+
+--4 What was the average quantity of products purchased per account in February? (Hint: just like question 3, we want the overall average, not the average for each account individually).
+select sum(Quantity)/count(acctnum) as AVG_Qty
+from BIT_DB.FebSales feb
+join BIT_DB.customers customers
+on feb.orderID = customers.order_id
+where length(orderID) = 6
+and orderID <> 'Order ID';
+-- First run at it. Avg Qty = 1.118. then ran the course answer(1) and then altered my sum/count and then also got 1
+
+select sum(quantity)/count(cust.acctnum)
+FROM BIT_DB.FebSales Feb
+
+LEFT JOIN BIT_DB.customers cust
+ON FEB.orderid=cust.order_id
+
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+-- Course answer Avg qty = 1
+
+
+
+--5 Which product brought in the most revenue in January and how much revenue did it bring in total?
+select distinct Product, sum(Quantity*price) as Revenue
+from BIT_DB.JanSales
+where length(orderID) = 6
+and orderID <> 'Order ID';
+-- My 1st answer. iphone 1,815,335. checked answer. not a match. Macbook Pro Laptop 399,500
+
+select Product, sum(Quantity*price) as Revenue
+from BIT_DB.JanSales
+where length(orderID) = 6
+and orderID <> 'Order ID'
+group by Product
+order by Revenue desc
+limit 1;
+-- Read the course answer and reworked mine how I would query to get Macbook answer
+
+SELECT product, 
+sum(quantity*price)
+FROM BIT_DB.JanSales 
+GROUP BY product
+ORDER BY sum(quantity*price) desc 
+LIMIT 1;
+-- Course answer. Iphone 399,500
+--# EXPLANATION #1 
+--# "Why do we use SUM(quantity*price) instead of SUM(quantity)*price?"
+--# In this question, we are using GROUP BY product. 
+--# The price of each individual product doesn't change. 
+--# That's why SUM(quantity*price) and SUM(quantity)*price, in this specific question, both give the same results. 
+
+
+select sum(quantity),
+price,
+sum(quantity)*price as revenue,
+sum(quantity*price) as revenue2,
+product 
+FROM BIT_DB.JanSales
+group by product;
+--# EXPLANATION #2
+--# "Why can't I just use sum(price) instead of sum(quantity*price)?"
+--# In this case, there's no difference between sum(price) and sum(quantity*price).
+--# However, the correct answer is sum(quantity*price), because revenue is calculated by multiplying the price of the product by the number sold. 
+--# In this data, each product is sold for only one price, so you can get the same answer with sum(price). 
+--# But not every dataset will be that simple, and it's best not to assume that's the case.
+--# If the product was sold for different prices on different days, sum(price) wouldn't give the correct answer.
 
 
 
