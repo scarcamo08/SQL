@@ -1,1 +1,168 @@
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+song_key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+song_mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness decimal(8,7) NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL );
+-- Come up with some of your own questions you'd like to know about the data, and use SQL to answer them. 
+-- Part of being a data analyst is thinking about what answers might be in the data if we look, so coming up with your own questions is a way to practice that.
+
+-- 1) What is the average danceability by artist and track?
+select artist_name, track_id, danceability
+from BIT_DB.Spotifydata
+order by artist_name;
+-- Began by working from what I know. And i can see Ariana Grande with two entries.
+-- I did the mental math to know her avg AND my result should be 0.7835 danceability.
+
+select artist_name, avg(danceability)
+from BIT_DB.Spotifydata
+group by artist_name;
+-- BINGO. the artists are grouped and the avg() run for those and I do see AG with avg danceability 0.7835
+
+
+
+
+-- 2) Who are the top 10 artists based on popularity?
+select  distinct artist_name, popularity
+from BIT_DB.Spotifydata
+order by popularity desc
+limit 10;
+-- Knew I wanted artist_name and popularity. Figured I'd just order by Pop. DESC and limit to the top 10.
+-- Results had the same artist multiple times, so i went back with DISTINCT to get no repeats
+-- Olivia Rodrigo at the number one spot with 95, but now that im thinking abt it, pretty sure I just queryed and found the row/entry w/highest Pop.
+
+select artist_name, avg(popularity) as AVG_Pop
+from BIT_DB.Spotifydata
+group by artist_name
+order by AVG_Pop desc
+limit 10;
+-- Queryed again but this time im pretty sure i am looking at TOP10 Pop. based on avg of all the tracks in this table.
+-- in which case, Olivia Rodrigo for example is now #3 witht 92.25 
+
+select artist_name, popularity
+from BIT_DB.Spotifydata
+where artist_name like '%Olivia%';
+-- Verifying ORs 4 songs 92,95,90,92 = 92.25
+
+
+
+
+-- 3) What artist released the longest song?
+select artist_name, max(duration_ms) as longest_song
+from BIT_DB.Spotifydata;
+-- Result: Farruko 287120 ms
+
+select artist_name, track_name, duration_ms
+from BIT_DB.Spotifydata
+order by duration_ms desc;
+-- Verified Farruko 287120 ms
+
+
+-- #########################################################################################Giving me trouble with limit 10
+-- 4) What's the average danceability for the 10 most popular songs?
+select track_name, popularity, danceability
+from BIT_DB.Spotifydata
+order by popularity desc
+limit 10;
+
+-- This result should lead to a avg 0.6199
+
+select avg(danceability)
+from BIT_DB.Spotifydata
+where popularity in
+(select popularity
+from BIT_DB.Spotifydata
+order by popularity desc
+limit 10);
+-- Result = 0.6192. this avg consistent with query using 11 values instead of the top top10. not sure why yet.
+select avg(danceability)
+from BIT_DB.Spotifydata
+where popularity in
+(select popularity
+from BIT_DB.Spotifydata
+order by popularity desc);
+--###############################################################################################################
+
+select avg(danceability)
+from BIT_DB.Spotifydata
+where popularity in 
+(select popularity
+from BIT_DB.Spotifydata
+order by popularity desc
+limit 9);
+-- Thats what confuses me. Even when changing the limit number to 9, still get the same answer as if it was pulling from 11 values
+
+
+
+-- X) Come up with your own questions and try to answer them
+select * from BIT_DB.Spotifydata;
+select artist_name, count(artist_name) as Total
+from BIT_DB.Spotifydata
+group by artist_name
+order by Total desc;
+-- 1) How many times does every artist appear on this list. OR leads with 4, two with 3, seven with 2 and the rest with 1.
+
+-- 2) Who are the artists and track name with the highest and lowest value in the Popularity column?
+select distinct artist_name, track_name, max(popularity), min(popularity)
+from BIT_DB.Spotifydata;
+--not working. gonna try joining to itself or subquery but idk abt that subquery
+
+select a.artist_name, a.track_name, a.max(popularity),
+b.artist_name, b.track_name, b.min(popularity)
+from BIT_DB.Spotifydata a
+join BIT_DB.Spotifydata b
+on a.id = b.id;
+-- not this. JOINing definitely not the approach
+
+select max(popularity), min(popularity)
+from BIT_DB.Spotifydata;
+-- this is returning 1 row showing 2 columns for max and min. i want 2 rows and 1 column showing max and min
+-- lets try finding artist/song info and FILTERING using max and min idk
+
+
+SELECT *
+FROM table_name
+WHERE column_name = (SELECT MAX(column_name) FROM table_name)
+   OR column_name = (SELECT MIN(column_name) FROM table_name);
+-- I asked for help
+   
+select * from BIT_DB.Spotifydata
+where popularity = (select max(popularity) from BIT_DB.Spotifydata)
+or popularity = (select min(popularity) from BIT_DB.Spotifydata);
+-- Looked for help and got the answer I was looking for
+
+select artist_name, track_name, popularity
+from BIT_DB.Spotifydata
+where popularity = (select max(popularity) from BIT_DB.Spotifydata)
+or popularity = (select min(popularity) from BIT_DB.Spotifydata);
+-- Refined query to view selected columns.
+-- Answers question of what artists and their tracks are the highest and lowest popularity on this list
+-- Good practice with researching options, using OR, using MAX/MIN, and using two subqueries
+
+-- 3) I am less concerned with a popularity value and how granular it is versus instead having song popularity be categorized into 4 groups
+select artist_name, track_name,
+case when popularity >= 90 then "Extremely"
+when popularity >= 80 then "Mostly"
+when popularity >= 70 then "Somewhat"
+else "Yikes"
+end as PopularityGroups
+from BIT_DB.Spotifydata
+order by popularity desc;
+-- Cool. largely extremely and mostly popular song. 4 Somewhats and 2 Yikes
+-- Good practice using CASE.could apply it to other columns like TEMPO and DURATION
+
+
 
