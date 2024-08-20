@@ -1,0 +1,131 @@
+**Designed a relational database capturing information about famous people and executed SQL queries incorporating aggregate functions, multiple joins, aliases, and filters to retrieve interconnected data.
+
+
+
+CREATE TABLE famous_ppl ( id integer primary key AUTOINCREMENT, name TEXT);
+
+INSERT INTO famous_ppl (name) VALUES ("Tom Hanks");
+INSERT INTO famous_ppl (name) VALUES ("Tim Allen");
+INSERT INTO famous_ppl (name) VALUES ("Owen Wilson");
+INSERT INTO famous_ppl (name) VALUES ("Dwayne Johnson");
+INSERT INTO famous_ppl (name) VALUES ("John Goodman");
+INSERT INTO famous_ppl (name) VALUES ("Ellen Degeneres");
+INSERT INTO famous_ppl (name) VALUES ("John Oliver");
+INSERT INTO famous_ppl (name) VALUES ("Holly Hunter");
+INSERT INTO famous_ppl (name) VALUES ("Sam Jackson");
+INSERT INTO famous_ppl (name) VALUES ("Joan Cusack");
+INSERT INTO famous_ppl (name) VALUES ("Kenny Loggins");
+INSERT INTO famous_ppl (name) VALUES ("Chad Kroeger");
+INSERT INTO famous_ppl (name) VALUES ("Weird Al");
+INSERT INTO famous_ppl (name) VALUES ("Bruno Mars");
+INSERT INTO famous_ppl (name) VALUES ("John Mayer");
+INSERT INTO famous_ppl (name) VALUES ("Kelly Clarkson");
+INSERT INTO famous_ppl (name) VALUES ("Whitney Houston");
+INSERT INTO famous_ppl (name) VALUES ("Lady Gaga");
+INSERT INTO famous_ppl (name) VALUES ("Miley Cyrus");
+INSERT INTO famous_ppl (name) VALUES ("Selena Gomez");
+INSERT INTO famous_ppl (name) VALUES ("Bill Cage");
+INSERT INTO famous_ppl (name) VALUES ("Les Grossman");
+INSERT INTO famous_ppl (name) VALUES ("Pete Mitchell");
+INSERT INTO famous_ppl (name) VALUES ("Ethan Hunt");
+INSERT INTO famous_ppl (name) VALUES ("James Patterson");
+INSERT INTO famous_ppl (name) VALUES ("JRR Tolkien");
+INSERT INTO famous_ppl (name) VALUES ("George Martin");
+INSERT INTO famous_ppl (name) VALUES ("Michael Crichton");
+INSERT INTO famous_ppl (name) VALUES ("JK Rowling");
+INSERT INTO famous_ppl (name) VALUES ("Stephen King");
+
+
+
+
+CREATE TABLE occupations (id integer primary key AUTOINCREMENT, person_id INTEGER, jobs TEXT, age INTEGER, gender TEXT);
+
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (1, "actor", 25, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (2, "actor", 27, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (3, "actor", 23, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (4, "actor", 31, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (5, "actor", 55, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (6, "actor", 61, "female");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (7, "actor", 72, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (8, "actor", 84, "female");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (9, "actor", 59, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (10, "actor", 67, "female");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (11, "actor", 66, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (12, "actor", 54, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (13, "actor", 48, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (14, "actor", 77, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (15, "actor", 64, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (16, "actor", 64, "female");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (17, "actor", 68, "female");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (18, "actor", 52, "female");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (19, "actor", 31, "female");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (20, "actor", 33, "female");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (21, "actor", 39, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (22, "actor", 39, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (23, "actor", 41, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (24, "actor", 21, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (25, "actor", 25, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (26, "actor", 28, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (27, "actor", 30, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (28, "actor", 40, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (29, "actor", 50, "female");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (30, "actor", 50, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (31, "actor", 34, "male");
+INSERT INTO occupations (person_id, jobs, age, gender) VALUES (32, "actor", 26, "male");
+
+
+
+
+
+CREATE TABLE hobbies(id integer primary key autoincrement, hobby_id integer, name TEXT);
+
+insert into hobbies (hobby_id, name) values (1, "garden");
+insert into hobbies (hobby_id, name) values (2, "read");
+insert into hobbies (hobby_id, name) values (3, "music");
+insert into hobbies (hobby_id, name) values (4, "pets");
+insert into hobbies (hobby_id, name) values (5, "volunteer");
+insert into hobbies (hobby_id, name) values (6, "read");
+insert into hobbies (hobby_id, name) values (7, "pets");
+insert into hobbies (hobby_id, name) values (8, "read");
+insert into hobbies (hobby_id, name) values (9, "volunteer");
+insert into hobbies (hobby_id, name) values (10, "music");
+insert into hobbies (hobby_id, name) values (11, "garden");
+insert into hobbies (hobby_id, name) values (12, "read");
+insert into hobbies (hobby_id, name) values (13, "music");
+insert into hobbies (hobby_id, name) values (14, "pets");
+insert into hobbies (hobby_id, name) values (15, "volunteer");
+insert into hobbies (hobby_id, name) values (16, "pets");
+insert into hobbies (hobby_id, name) values (17, "pets");
+insert into hobbies (hobby_id, name) values (18, "read");
+insert into hobbies (hobby_id, name) values (19, "volunteer");
+insert into hobbies (hobby_id, name) values (20, "music");
+insert into hobbies (hobby_id, name) values (21, "garden");
+insert into hobbies (hobby_id, name) values (22, "volunteer");
+insert into hobbies (hobby_id, name) values (23, "music");
+insert into hobbies (hobby_id, name) values (24, "pets");
+insert into hobbies (hobby_id, name) values (25, "volunteer");
+insert into hobbies (hobby_id, name) values (26, "read");
+insert into hobbies (hobby_id, name) values (27, "garden");
+insert into hobbies (hobby_id, name) values (28, "read");
+insert into hobbies (hobby_id, name) values (29, "volunteer");
+insert into hobbies (hobby_id, name) values (30, " ");
+insert into hobbies (hobby_id, name) values (31, " ");
+insert into hobbies (hobby_id, name) values (32, " ");
+
+
+
+select hobbies.name, sum(occupations.age) from hobbies join occupations on hobbies.id = occupations.person_id group by hobbies.name;
+
+select famous_ppl.id, famous_ppl.name, hobbies.name from famous_ppl left outer join hobbies on famous_ppl.id = hobbies.hobby_id;
+
+select name, age from famous_ppl join occupations on famous_ppl.id = occupations.person_id;
+
+select famous_ppl.name, occupations.gender from famous_ppl, occupations where famous_ppl.id = occupations.id and gender="female";
+
+select * from famous_ppl join occupations on famous_ppl.id = occupations.id; 
+
+select famous_ppl.id, famous_ppl.name, occupations.jobs, occupations.age, occupations.gender from famous_ppl join occupations on famous_ppl.id = occupations.id;
+
+select famous_ppl.name, hobbies.name as hobby from famous_ppl join hobbies on famous_ppl.id = hobbies.hobby_id;
+
+select famous_ppl.name, hobbies.name as hobby, occupations.age from famous_ppl join hobbies on famous_ppl.id = hobbies.hobby_id join occupations on famous_ppl.id = occupations.person_id;
